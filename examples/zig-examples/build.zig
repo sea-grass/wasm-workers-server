@@ -86,6 +86,31 @@ pub fn build(b: *std.Build) !void {
         try worker.addToWriteFiles(b, wf);
     }
 
+    {
+        const worker_dep = b.createModule(.{
+            .root_source_file = .{ .path = "../../kits/zig/worker/src/worker.zig" },
+        });
+        const exe = b.addExecutable(.{
+            .name = "workerkv",
+            .root_source_file = .{ .path = "src/prev-worker-kv.zig" },
+            .target = target,
+            .optimize = optimize,
+        });
+        exe.wasi_exec_model = .reactor;
+        exe.root_module.addImport("worker", worker_dep);
+        _ = wf.addCopyFile(exe.getEmittedBin(), "prev-worker-kv.wasm");
+
+        const config =
+            \\ name = "prev-worker-kv"
+            \\ version = "1"
+            \\
+            \\[data]
+            \\[data.kv]
+            \\namespace  = "workerkv"
+        ;
+        _ = wf.add("prev-worker-kv.toml", config);
+    }
+
     // Add folder for mount example
     _ = wf.addCopyFile(.{ .path = "src/_images/zig.svg" }, "_images/zig.svg");
 
