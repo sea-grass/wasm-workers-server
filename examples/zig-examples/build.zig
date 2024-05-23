@@ -4,11 +4,11 @@ const wws = @import("wws");
 const examples = &[_]Example{
     .{
         .name = "basic",
-        .root_source_file = .{ .path = "src/basic.zig" },
+        .source = "src/basic.zig",
     },
     .{
         .name = "envs",
-        .root_source_file = .{ .path = "src/envs.zig" },
+        .source = "src/envs.zig",
         .features = .{
             .vars = &.{
                 .{ .name = "MESSAGE", .value = "Hello! This message comes from an environment variable" },
@@ -17,22 +17,22 @@ const examples = &[_]Example{
     },
     .{
         .name = "workerkv",
-        .root_source_file = .{ .path = "src/worker-kv.zig" },
+        .source = "src/worker-kv.zig",
         .features = .{ .kv = .{ .namespace = "workerkv" } },
     },
     .{
         .name = "no-alloc-kv",
-        .root_source_file = .{ .path = "src/no-alloc-kv.zig" },
+        .source = "src/no-alloc-kv.zig",
         .features = .{ .kv = .{ .namespace = "workerkv" } },
     },
     .{
         .name = "mixed-alloc-kv",
-        .root_source_file = .{ .path = "src/mixed-alloc-kv.zig" },
+        .source = "src/mixed-alloc-kv.zig",
         .features = .{ .kv = .{ .namespace = "workerkv" } },
     },
     .{
         .name = "mount",
-        .root_source_file = .{ .path = "src/mount.zig" },
+        .source = "src/mount.zig",
         .features = .{
             .folders = &.{
                 .{
@@ -44,19 +44,19 @@ const examples = &[_]Example{
     },
     .{
         .name = "params",
-        .root_source_file = .{ .path = "src/params.zig" },
+        .source = "src/params.zig",
         .path = "params/[id]",
     },
     .{
         .name = "router",
-        .root_source_file = .{ .path = "src/router.zig" },
+        .source = "src/router.zig",
         .path = "router/[...path]",
     },
 };
 
 const Example = struct {
     name: []const u8,
-    root_source_file: std.Build.LazyPath,
+    source: []const u8,
     path: ?[]const u8 = null,
     features: ?wws.Features = null,
 };
@@ -74,7 +74,7 @@ pub fn build(b: *std.Build) !void {
         const worker = try wws.addWorker(b, .{
             .name = e.name,
             .path = e.path orelse e.name,
-            .root_source_file = e.root_source_file,
+            .root_source_file = b.path(e.source),
             .target = target,
             .optimize = optimize,
             .wws = wws_dep,
@@ -87,7 +87,7 @@ pub fn build(b: *std.Build) !void {
     }
 
     // Add folder for mount example
-    _ = wf.addCopyFile(.{ .path = "src/_images/zig.svg" }, "_images/zig.svg");
+    _ = wf.addCopyFile(b.path("src/_images/zig.svg"), "_images/zig.svg");
 
     const install = b.addInstallDirectory(.{
         .source_dir = wf.getDirectory(),

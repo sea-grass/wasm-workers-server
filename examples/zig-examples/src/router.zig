@@ -42,8 +42,19 @@ fn handle(arena: std.mem.Allocator, request: wws.Request) !wws.Response {
         arena,
         .{
             .method = request.method,
-            .path = uri.path,
-            .query = uri.query orelse "",
+            .path = switch (uri.path) {
+                .raw => |raw| raw,
+                .percent_encoded => |encoded| encoded,
+            },
+            .query = query: {
+                if (uri.query) |q| {
+                    switch (q) {
+                        .raw => |raw| break :query raw,
+                        .percent_encoded => |encoded| break :query encoded,
+                    }
+                }
+                break :query "";
+            },
         },
         .{arena},
     ) catch |err| switch (err) {

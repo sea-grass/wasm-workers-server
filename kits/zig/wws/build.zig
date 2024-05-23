@@ -7,7 +7,7 @@ pub fn build(b: *std.Build) void {
     _ = b.standardOptimizeOption(.{});
 
     const module = b.addModule(module_name, .{
-        .root_source_file = .{ .path = "src/wws.zig" },
+        .root_source_file = b.path("src/wws.zig"),
         .target = getTarget(b),
     });
 
