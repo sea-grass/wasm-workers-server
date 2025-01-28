@@ -47,11 +47,6 @@ const examples = &[_]Example{
         .source = "src/params.zig",
         .path = "params/[id]",
     },
-    .{
-        .name = "router",
-        .source = "src/router.zig",
-        .path = "router/[...path]",
-    },
 };
 
 const Example = struct {
@@ -66,7 +61,6 @@ pub fn build(b: *std.Build) !void {
     const optimize = b.standardOptimizeOption(.{});
 
     const wws_dep = b.dependency("wws", .{});
-    const zig_router_dep = b.dependency("zig-router", .{});
 
     const wf = b.addWriteFiles();
 
@@ -80,8 +74,6 @@ pub fn build(b: *std.Build) !void {
             .wws = wws_dep,
             .features = e.features orelse .{},
         });
-
-        worker.exe.root_module.addImport("zig-router", zig_router_dep.module("zig-router"));
 
         try worker.addToWriteFiles(b, wf);
     }
