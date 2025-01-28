@@ -4,7 +4,7 @@ sidebar_position: 6
 
 # Zig
 
-Zig workers are tested with Zig version `0.12.0`. Then, they are loaded by Wasm Workers Server and start processing requests.
+Zig workers are tested with Zig version `0.14.0`. Then, they are loaded by Wasm Workers Server and start processing requests.
 
 ## Your first Zig worker
 
@@ -474,7 +474,7 @@ Find other examples in the [`/examples` directory](https://github.com/vmware-lab
 
 ## Contributors
 
-The Zig kit was originally authored for Zig 0.11 by Christoph Voigt ([@voigt](https://github.com/voigt)). It was then updated for Zig 0.12 by Christopher Grass([@sea-grass](https://github.com/sea-grass)).
+The Zig kit was originally authored for Zig 0.11 by Christoph Voigt ([@voigt](https://github.com/voigt)). It was then updated for Zig 0.14 by Christopher Grass ([@sea-grass](https://github.com/sea-grass)).
 
 ## Feature compatibility
 
