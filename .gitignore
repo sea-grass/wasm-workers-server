@@ -4,6 +4,6 @@ target
 examples/*.toml
 .DS_Store
 .wws
-**/zig-cache
+**/.zig-cache
 **/zig-out
 node_modules
